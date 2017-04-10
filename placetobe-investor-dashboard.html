@@ -1,0 +1,34 @@
+<link rel="import" href="../polymer/polymer.html">
+
+<!--
+`placetobe-investor-dashboard`
+Placetobe dashboard for investors
+
+@demo demo/index.html 
+-->
+
+<dom-module id="placetobe-investor-dashboard">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+    </style>
+    <h2>Hello [[prop1]]</h2>
+  </template>
+
+  <script>
+    Polymer({
+
+      is: 'placetobe-investor-dashboard',
+
+      properties: {
+        prop1: {
+          type: String,
+          value: 'placetobe-investor-dashboard',
+        },
+      },
+
+    });
+  </script>
+</dom-module>
