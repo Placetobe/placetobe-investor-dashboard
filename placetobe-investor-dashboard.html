@@ -1,4 +1,7 @@
 <link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../placetobe-styles/placetobe-styles.html">
+<link rel="import" href="../caas-auth-behavior/caas-auth-behavior.html">
+<link rel="import" href="../placetobe-signin-card/placetobe-signin-card.html">
 
 <!--
 `placetobe-investor-dashboard`
@@ -14,21 +17,43 @@ Placetobe dashboard for investors
         display: block;
       }
     </style>
-    <h2>Hello [[prop1]]</h2>
+    <placetobe-signin-card
+      hidden$="[[userId]]"
+      id="signInCard"
+      api-endpoint="[[apiEndpoint]]"
+      signed-in="{{signedIn}}"
+      access-token="{{accessToken}}"
+    ></placetobe-signin-card>    
+
+  <template is="dom-if" if="[[userId]]">
+    Your dashboard
+  </template>
+
   </template>
 
   <script>
     Polymer({
 
       is: 'placetobe-investor-dashboard',
+      behaviors: [CaasAuthBehavior],
 
       properties: {
-        prop1: {
+        apiEndpoint: {
           type: String,
-          value: 'placetobe-investor-dashboard',
-        },
+          value: null
+        },        
+        userId: {
+          type: String
+        }
+      },
+      observers: [
+        '_setUserParameters(_tokenData.data.*)'
+      ],
+
+      _setUserParameters: function (tokenDataChange) {
+        this.userId = this._tokenData.data.userId;
       },
 
-    });
+    });e
   </script>
 </dom-module>

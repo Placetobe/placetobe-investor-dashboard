@@ -3,7 +3,10 @@
   "description": "Placetobe dashboard for investors",
   "main": "placetobe-investor-dashboard.html",
   "dependencies": {
-    "polymer": "Polymer/polymer#^1.4.0"
+    "polymer": "Polymer/polymer#^1.4.0",
+    "placetobe-styles": "Placetobe/placetobe-styles",    
+    "caas-auth-behavior": "CaasElements/caas-auth-behavior",
+    "placetobe-signin-card": "Placetobe/placetobe-signin-card"   
   },
   "devDependencies": {
     "iron-component-page": "PolymerElements/iron-component-page#^1.0.0",
