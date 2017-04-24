@@ -7,22 +7,43 @@
     <title>placetobe-investor-dashboard demo</title>
 
     <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
+    <script>
+      window.Polymer = {
+        useNativeCSSProperties: true,
+        lazyRegister: true,
+        dom: 'shadow'
+      };
+    </script>
 
     <link rel="import" href="../../iron-demo-helpers/demo-pages-shared-styles.html">
     <link rel="import" href="../../iron-demo-helpers/demo-snippet.html">
     <link rel="import" href="../placetobe-investor-dashboard.html">
 
     <style is="custom-style" include="demo-pages-shared-styles">
+      demo-snippet {
+        --demo-snippet-demo: {
+          display: block;
+          padding: 0;
+        }
+      }
+
+      placetobe-investor-dashboard {
+        position: fixed;
+        top:0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        --placetobe-stepper-form-content-height: 100vh;
+      }
+
+      body {
+        margin: 0;
+        padding: 0;
+        background-color: white;
+      }      
     </style>
   </head>
   <body>
-    <div class="vertical-section-container centered">
-      <h3>Basic placetobe-investor-dashboard demo</h3>
-      <demo-snippet>
-        <template>
-          <placetobe-investor-dashboard></placetobe-investor-dashboard>
-        </template>
-      </demo-snippet>
-    </div>
+      <placetobe-investor-dashboard api-endpoint="http://canapi.local"></placetobe-investor-dashboard>
   </body>
 </html>
