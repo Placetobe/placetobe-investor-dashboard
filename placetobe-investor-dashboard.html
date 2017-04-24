@@ -1,7 +1,14 @@
 <link rel="import" href="../polymer/polymer.html">
 <link rel="import" href="../placetobe-styles/placetobe-styles.html">
 <link rel="import" href="../caas-auth-behavior/caas-auth-behavior.html">
+<link rel="import" href="../caas-investor/caas-investor.html">
+
 <link rel="import" href="../placetobe-signin-card/placetobe-signin-card.html">
+<link rel="import" href="../placetobe-card/placetobe-card.html">
+<link rel="import" href="../placetobe-input-box/placetobe-input-box.html">
+<link rel="import" href="../placetobe-button/placetobe-button.html">
+
+<link rel="import" href="../placetobe-mailinglist-subscribe-form/placetobe-mailinglist-subscribe-form.html">
 
 <!--
 `placetobe-investor-dashboard`
@@ -22,9 +29,36 @@ Placetobe dashboard for investors
         width: 100%;
         max-width: 540px;
       }
+      placetobe-signin-card[hidden] {
+        display: none;
+      }
+      placetobe-card {
+        width: 100%;
+        max-width: 540px;     
+        display: flex;
+           
+        flex-direction: horizontal;
+        flex-basis: wrap;        
+      }
+      :host ul {
+        list-style: none;
+      }
+      li {
+        padding-bottom: 5px;
+        display: flex;
+        flex-direction: horizontal;
+        flex-basis: wrap;             
+      }
+      placetobe-input-box {
+        min-width: 88px;
+      }
+      placetobe-input-box:last-child {
+        padding-left: 5px;
+      }      
     </style>
+
     <placetobe-signin-card
-      hidden$="[[userId]]"
+      hidden$="[[signedIn]]"
       id="signInCard"
       api-endpoint="[[apiEndpoint]]"
       signed-in="{{signedIn}}"
@@ -33,7 +67,55 @@ Placetobe dashboard for investors
     ></placetobe-signin-card>    
 
     <template is="dom-if" if="[[userId]]">
-      Your dashboard
+
+      <caas-investor 
+        id="investor"
+        api-endpoint="[[apiEndpoint]]" 
+        investor-id="[[userId]]" 
+        access-token="[[accessToken]]" 
+        first-name="{{firstName}}"
+        last-name="{{lastName}}"
+        subscribed-to-newsletter="{{subscribedToNewsletter}}"
+        iban="{{iban}}"
+        name-at-bank="{{nameAtBank}}"
+        twitter="{{twitter}}"
+        facebook="{{facebook}}"
+        linkedin="{{linkedin}}"
+        address="{{address}}"                            
+        currently-invested-capital="{{currentlyInvestedCapital}}"                                                                                    
+        total-investments="{{totalInvestments}}"                                                                                         
+      ></caas-investor>
+
+      <placetobe-card title="Jouw details">
+        <article slot="main">
+          <ul>
+            <li>
+              <placetobe-input-box name="Voornaam" value="{{firstName}}"></placetobe-input-box>
+              <placetobe-input-box name="Achternaam" value="{{lastName}}"></placetobe-input-box>
+            </li>
+            <li>
+              <placetobe-input-box name="Straatnaam" value="{{address.street}}"></placetobe-input-box>
+              <placetobe-input-box name="Huisnummer" value="{{address.houseNumber}}"></placetobe-input-box>              
+            </li>                               
+            <li>
+              <placetobe-input-box name="Postcode" value="{{address.postalCode}}"></placetobe-input-box>
+              <placetobe-input-box name="Stad" value="{{address.city}}"></placetobe-input-box>              
+            </li>                   
+            <li>
+              <placetobe-input-box name="Provincie" value="{{address.region}}"></placetobe-input-box>
+              <placetobe-input-box name="Land" value="{{address.country}}"></placetobe-input-box>              
+            </li>       
+            <li>
+              Geabboneerd op nieuwsbrief: <input type="checkbox" checked="{{subscribedToNewsletter::change}}">
+            </li>                        
+          </ul>
+          <placetobe-button
+            title="Sla op"
+            slot="footer"
+            on-tap="saveInvestorDetails"
+          ><span>Sla op</span>          
+        </article>
+      </placetobe-card>
     </template>
 
   </template>
@@ -48,9 +130,22 @@ Placetobe dashboard for investors
         apiEndpoint: {
           type: String,
           value: null
-        },        
+        },       
+         
         userId: {
           type: String
+        },
+        
+        firstName: {
+          type: String          
+        },
+
+        lastName: {
+          type: String          
+        },
+
+        address: {
+          type: Object
         }
       },
       observers: [
@@ -60,6 +155,11 @@ Placetobe dashboard for investors
       _setUserParameters: function (tokenDataChange) {
         this.userId = this._tokenData.data.userId;
       },
+
+      saveInvestorDetails: function () {
+        this.$$('#investor').saveUpdatedProfile();
+        this.$$('#investor').saveNewsletterSubscription();
+      }
 
     });
   </script>
