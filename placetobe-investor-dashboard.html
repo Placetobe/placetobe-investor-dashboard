@@ -51,6 +51,7 @@ Placetobe dashboard for investors
       }
       placetobe-input-box {
         min-width: 88px;
+       --input-box-disabled-background-color: var(-placetobe-color-yellow);                
       }
       placetobe-input-box:last-child {
         padding-left: 5px;
@@ -105,6 +106,10 @@ Placetobe dashboard for investors
               <placetobe-input-box name="Provincie" value="{{address.region}}"></placetobe-input-box>
               <placetobe-input-box name="Land" value="{{address.country}}"></placetobe-input-box>              
             </li>       
+            <li>
+              <placetobe-input-box disabled name="IBAN" value="[[iban]]"></placetobe-input-box>
+              <placetobe-input-box disabled name="Naam bij bank" value="[[nameAtBank]]"></placetobe-input-box>              
+            </li>                   
             <li>
               Geabboneerd op nieuwsbrief: <input type="checkbox" checked="{{subscribedToNewsletter::change}}">
             </li>                        
