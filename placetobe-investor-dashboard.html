@@ -23,17 +23,20 @@ Placetobe dashboard for investors
         max-width: 540px;
       }
     </style>
-    <placetobe-signin-card
-      hidden$="[[userId]]"
-      id="signInCard"
-      api-endpoint="[[apiEndpoint]]"
-      signed-in="{{signedIn}}"
-      access-token="{{accessToken}}"
-      user-role="investor"      
-    ></placetobe-signin-card>    
 
-    <template is="dom-if" if="[[userId]]">
-      Your dashboard
+    <template is="dom-if" if="[[!signedIn]]">
+      <placetobe-signin-card
+        hidden$="[[userId]]"
+        id="signInCard"
+        api-endpoint="[[apiEndpoint]]"
+        signed-in="{{signedIn}}"
+        access-token="{{accessToken}}"
+        user-role="investor"      
+      ></placetobe-signin-card>
+    </template> 
+
+    <template is="dom-if" if="[[signedIn]]">
+      Welcome investor, you are logged in!
     </template>
 
   </template>
@@ -48,9 +51,15 @@ Placetobe dashboard for investors
         apiEndpoint: {
           type: String,
           value: null
-        },        
+        },
+        
         userId: {
           type: String
+        },
+        
+        signedIn: {
+          type: Boolean,
+          value: false
         }
       },
       observers: [
