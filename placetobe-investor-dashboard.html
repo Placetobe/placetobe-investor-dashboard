@@ -14,7 +14,7 @@
 `placetobe-investor-dashboard`
 Placetobe dashboard for investors
 
-@demo demo/index.html 
+@demo demo/index.html
 -->
 
 <dom-module id="placetobe-investor-dashboard">
@@ -34,11 +34,11 @@ Placetobe dashboard for investors
       }
       placetobe-card {
         width: 100%;
-        max-width: 540px;     
+        max-width: 540px;
         display: flex;
-           
+
         flex-direction: horizontal;
-        flex-basis: wrap;        
+        flex-basis: wrap;
       }
       :host ul {
         list-style: none;
@@ -47,15 +47,15 @@ Placetobe dashboard for investors
         padding-bottom: 5px;
         display: flex;
         flex-direction: horizontal;
-        flex-basis: wrap;             
+        flex-basis: wrap;
       }
       placetobe-input-box {
         min-width: 88px;
-       --input-box-disabled-background-color: var(-placetobe-color-yellow);                
+       --input-box-disabled-background-color: var(-placetobe-color-yellow);
       }
       placetobe-input-box:last-child {
         padding-left: 5px;
-      }      
+      }
     </style>
 
     <placetobe-signin-card
@@ -64,27 +64,28 @@ Placetobe dashboard for investors
       api-endpoint="[[apiEndpoint]]"
       signed-in="{{signedIn}}"
       access-token="{{accessToken}}"
-      user-role="investor"      
-    ></placetobe-signin-card>    
+      user-role="investor"
+    ></placetobe-signin-card>
 
     <template is="dom-if" if="[[userId]]">
 
-      <caas-investor 
+      <caas-investor
         id="investor"
-        api-endpoint="[[apiEndpoint]]" 
-        investor-id="[[userId]]" 
-        access-token="[[accessToken]]" 
+        api-endpoint="[[apiEndpoint]]"
+        investor-id="[[userId]]"
+        access-token="[[accessToken]]"
         first-name="{{firstName}}"
         last-name="{{lastName}}"
         subscribed-to-newsletter="{{subscribedToNewsletter}}"
+        privacy="{{privacy}}"
         iban="{{iban}}"
-        name-at-bank="{{nameAtBank}}"
+        bank-account-name="{{bankAccountName}}"
         twitter="{{twitter}}"
         facebook="{{facebook}}"
         linkedin="{{linkedin}}"
-        address="{{address}}"                            
-        currently-invested-capital="{{currentlyInvestedCapital}}"                                                                                    
-        total-investments="{{totalInvestments}}"                                                                                         
+        address="{{address}}"
+        currently-invested-capital="{{currentlyInvestedCapital}}"
+        total-investments="{{totalInvestments}}"
       ></caas-investor>
 
       <placetobe-card title="Jouw details">
@@ -96,29 +97,32 @@ Placetobe dashboard for investors
             </li>
             <li>
               <placetobe-input-box name="Straatnaam" value="{{address.street}}"></placetobe-input-box>
-              <placetobe-input-box name="Huisnummer" value="{{address.houseNumber}}"></placetobe-input-box>              
-            </li>                               
+              <placetobe-input-box name="Huisnummer" value="{{address.houseNumber}}"></placetobe-input-box>
+            </li>
             <li>
               <placetobe-input-box name="Postcode" value="{{address.postalCode}}"></placetobe-input-box>
-              <placetobe-input-box name="Stad" value="{{address.city}}"></placetobe-input-box>              
-            </li>                   
+              <placetobe-input-box name="Stad" value="{{address.city}}"></placetobe-input-box>
+            </li>
             <li>
               <placetobe-input-box name="Provincie" value="{{address.region}}"></placetobe-input-box>
-              <placetobe-input-box name="Land" value="{{address.country}}"></placetobe-input-box>              
-            </li>       
+              <placetobe-input-box name="Land" value="{{address.country}}"></placetobe-input-box>
+            </li>
             <li>
               <placetobe-input-box disabled name="IBAN" value="[[iban]]"></placetobe-input-box>
-              <placetobe-input-box disabled name="Naam bij bank" value="[[nameAtBank]]"></placetobe-input-box>              
-            </li>                   
+              <placetobe-input-box disabled name="Naam bij bank" value="[[bankAccountName]]"></placetobe-input-box>
+            </li>
             <li>
               Geabboneerd op nieuwsbrief: <input type="checkbox" checked="{{subscribedToNewsletter::change}}">
-            </li>                        
+            </li>
+            <li>
+              Privacy: <input type="checkbox" checked="{{privacy::change}}">
+            </li>
           </ul>
           <placetobe-button
             title="Sla op"
             slot="footer"
             on-tap="saveInvestorDetails"
-          ><span>Sla op</span>          
+          ><span>Sla op</span>
         </article>
       </placetobe-card>
     </template>
@@ -135,22 +139,26 @@ Placetobe dashboard for investors
         apiEndpoint: {
           type: String,
           value: null
-        },       
-         
+        },
+
         userId: {
           type: String
         },
-        
+
         firstName: {
-          type: String          
+          type: String
         },
 
         lastName: {
-          type: String          
+          type: String
         },
 
         address: {
           type: Object
+        },
+        privacy: {
+            type: Boolean,
+            value: false
         }
       },
       observers: [
@@ -162,7 +170,7 @@ Placetobe dashboard for investors
       },
 
       saveInvestorDetails: function () {
-        this.$$('#investor').saveUpdatedProfile();
+        this.$$('#investor').save();
         this.$$('#investor').saveNewsletterSubscription();
       }
 
