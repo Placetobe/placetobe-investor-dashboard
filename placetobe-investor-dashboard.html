@@ -86,6 +86,8 @@ Placetobe dashboard for investors
         address="{{address}}"
         currently-invested-capital="{{currentlyInvestedCapital}}"
         total-investments="{{totalInvestments}}"
+        campaigns="{{campaigns}}"
+        contracts="{{contracts}}"
       ></caas-investor>
 
       <placetobe-card title="Jouw details">
@@ -123,8 +125,63 @@ Placetobe dashboard for investors
             slot="footer"
             on-tap="saveInvestorDetails"
           ><span>Sla op</span>
+
         </article>
       </placetobe-card>
+
+      <template is="dom-if" if="[[contracts]]">
+          <placetobe-card>
+              <article slot="main">
+                <template is="dom-repeat" items="[[contracts]]" as="contract">
+                  <li>
+                    Project Name: [[contract.projectNaam]]
+                  </li>
+                  <li>
+                    Investering: [[contract.investment]]
+                  </li>
+                  <li>
+                    Date: [[contract.creationDateTime]]
+                  </li>
+
+                </template>
+          </article>
+        </placetobe-card>
+    </template>
+
+    <template is="dom-if" if="[[campaigns.payments]]">
+          <placetobe-card>
+              <article slot="main">
+
+              <template is="dom-repeat" items="[[campaigns]]">
+                <template is="dom-repeat" items="[[item.payments]]" as="repayment">
+                  <li>
+                    Project Name: [[repayment.campaignProjectNaam]]
+                  </li>
+                  <li>
+                    Project completed: [[repayment.completed]]
+                  </li>
+                  <li>
+                    Date: [[repayment.date]]
+                  </li>
+                  <li>
+                    Paid Payments: [[repayment.currentPaymentsStatus.paidPayments]]
+                  </li>
+                  <li>
+                    Unpaid Payments: [[repayment.currentPaymentsStatus.unpaidPayments]]
+                  </li>
+                  <li>
+                    Percentage remaining debt: [[repayment.remainingDebtPercentage]]
+                  </li>
+                  <li>
+                    totalAmountThisPayment: [[repayment.totalAmountThisPayment]]
+                  </li>
+                </template>
+              </template>
+            </article>
+
+          </placetobe-card>
+
+        </template>
 
     </template>
 
@@ -161,7 +218,7 @@ Placetobe dashboard for investors
             type: Boolean,
             value: false
         },
-        
+
         signedIn: {
           type: Boolean,
           value: false
