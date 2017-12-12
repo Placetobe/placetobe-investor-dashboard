@@ -1,4 +1,5 @@
 <link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../iron-selector/iron-selector.html">
 <link rel="import" href="../placetobe-styles/placetobe-styles.html">
 <link rel="import" href="../caas-auth-behavior/caas-auth-behavior.html">
 <link rel="import" href="../caas-investor/caas-investor.html">
@@ -8,7 +9,7 @@
 <link rel="import" href="../placetobe-input-box/placetobe-input-box.html">
 <link rel="import" href="../placetobe-button/placetobe-button.html">
 
-<link rel="import" href="../placetobe-mailinglist-subscribe-form/placetobe-mailinglist-subscribe-form.html">
+<link rel="import" href="../placetobe-navigation-bar/placetobe-navigation-bar.html">
 
 <!--
 `placetobe-investor-dashboard`
@@ -32,30 +33,87 @@ Placetobe dashboard for investors
       placetobe-signin-card[hidden] {
         display: none;
       }
+
       placetobe-card {
         width: 100%;
-        max-width: 540px;
         display: flex;
-
         flex-direction: horizontal;
         flex-basis: wrap;
+        --placetobe-card-color: #eee;
       }
+
       :host ul {
         list-style: none;
+        padding: 0;
       }
+
       li {
+        display: flex;
         padding-bottom: 5px;
         display: flex;
         flex-direction: horizontal;
         flex-basis: wrap;
       }
       placetobe-input-box {
-        min-width: 88px;
+        flex: 1;
+        padding: 0 3px;
        --input-box-disabled-background-color: var(-placetobe-color-yellow);
       }
-      placetobe-input-box:last-child {
-        padding-left: 5px;
+
+      :host placetobe-navigation-bar {
+        position: relative;
+        z-index: 9;
+        width: 100%;
       }
+
+      /* shared page style?? */
+
+      :host main {
+        @apply(--placetobe-border-box);
+        @apply(--placetobe-flex-layout--vertical);
+        @apply(--placetobe-flex-align--space-between);
+        @apply(--placetobe-cross-align--start);
+        @apply(--placetobe-flex-wrap--nowrap);
+        max-width: calc( var(--placetobe-layout-width) + (var(--placetobe-margin) * 2) );
+        padding: 0 var(--placetobe-margin);
+        margin: calc( var(--placetobe-margin) * 3 ) auto;
+        position: relative;
+      }
+
+      @media(min-width: 601px) {
+        :host main {
+          @apply(--placetobe-flex-layout--horizontal); 
+        }
+      }
+
+      @media(min-width: 990px) {
+        :host main {
+          min-width: calc( var(--placetobe-layout-width) + (var(--placetobe-margin) * 2) );
+        }
+      }
+
+      :host main > * {
+        @apply --placetobe-border-box;
+        min-width: var(--placetobe-column-width);
+        max-width: 100%;
+      }
+
+      :host main > *:nth-child(1) {
+        @apply(--placetobe-flex-item--2);
+        margin-bottom: var(--placetobe-margin);
+      }
+
+      @media(min-width: 601px) {
+        :host main > *:nth-child(1) {
+          padding-right: var(--placetobe-margin);
+        }
+      }
+
+      :host main > *:nth-child(2) {
+        @apply(--placetobe-flex-item--1);
+      }
+
+      /* end shared page style?? */
     </style>
 
     <placetobe-signin-card
@@ -90,102 +148,181 @@ Placetobe dashboard for investors
         contracts="{{contracts}}"
       ></caas-investor>
 
-      <placetobe-card title="Jouw details">
-        <article slot="main">
-          <ul>
-            <li>
-              <placetobe-input-box name="Voornaam" value="{{firstName}}"></placetobe-input-box>
-              <placetobe-input-box name="Achternaam" value="{{lastName}}"></placetobe-input-box>
-            </li>
-            <li>
-              <placetobe-input-box name="Straatnaam" value="{{address.street}}"></placetobe-input-box>
-              <placetobe-input-box name="Huisnummer" value="{{address.houseNumber}}"></placetobe-input-box>
-            </li>
-            <li>
-              <placetobe-input-box name="Postcode" value="{{address.postalCode}}"></placetobe-input-box>
-              <placetobe-input-box name="Stad" value="{{address.city}}"></placetobe-input-box>
-            </li>
-            <li>
-              <placetobe-input-box name="Provincie" value="{{address.region}}"></placetobe-input-box>
-              <placetobe-input-box name="Land" value="{{address.country}}"></placetobe-input-box>
-            </li>
-            <li>
-              <placetobe-input-box disabled name="IBAN" value="[[iban]]"></placetobe-input-box>
-              <placetobe-input-box disabled name="Naam bij bank" value="[[bankAccountName]]"></placetobe-input-box>
-            </li>
-            <li>
-              <placetobe-input-box disabled name="Huidig belegd vermogen" value="[[currentlyInvestedCapital]]"></placetobe-input-box>
-              <placetobe-input-box disabled name="Totaal geinvesteerd" value="[[totalInvestments]]"></placetobe-input-box>
-            </li>
-            <li>
-              Geabboneerd op nieuwsbrief: <input type="checkbox" checked="{{subscribedToNewsletter::change}}">
-            </li>
-            <li>
-              Privacy: <input type="checkbox" checked="{{privacy::change}}">
-            </li>
-          </ul>
+      <placetobe-navigation-bar>
+        <li slot="navigation">Dashboard Investeerders</li>
+
+        <iron-selector slot="footer" selected="{{selectedTab}}" attr-for-selected="data-name">
+          <placetobe-button link data-name="details">Details</placetobe-button>
+          <placetobe-button link data-name="investments">Investeringen</placetobe-button>
+          <placetobe-button link data-name="agenda">Terugbetalingen</placetobe-button>
           <placetobe-button
-            title="Sla op"
-            slot="footer"
-            on-tap="saveInvestorDetails"
-          ><span>Sla op</span>
+            on-tap="signOut"
+          >Sign Out</placetobe-button>
+        </iron-selector>
+      </placetobe-navigation-bar>
 
-        </article>
-      </placetobe-card>
+      <main>
+        <div>
 
-      <template is="dom-if" if="[[contracts]]">
-          <placetobe-card>
+          <!-- details -->
+          <template is="dom-if" if="[[_selectedTabEquals(selectedTab, 'details')]]">
+
+            <placetobe-card title="Jouw gegevens">
               <article slot="main">
+                <ul>
+                  <li>
+                    <placetobe-input-box
+                      name="Voornaam"
+                      value="{{firstName}}"
+                    ></placetobe-input-box>
+                    <placetobe-input-box
+                      name="Achternaam"
+                      value="{{lastName}}"
+                    ></placetobe-input-box>
+                  </li>
+                  <li>
+                    <placetobe-input-box
+                      name="Straatnaam"
+                      value="{{address.street}}"
+                    ></placetobe-input-box>
+                    <placetobe-input-box
+                      name="Huisnummer"
+                      value="{{address.houseNumber}}"
+                    ></placetobe-input-box>
+                  </li>
+                  <li>
+                    <placetobe-input-box
+                      name="Postcode"
+                      value="{{address.postalCode}}"
+                    ></placetobe-input-box>
+                    <placetobe-input-box
+                      name="Stad"
+                      value="{{address.city}}"
+                    ></placetobe-input-box>
+                  </li>
+                  <li>
+                    <placetobe-input-box
+                      name="Provincie"
+                      value="{{address.region}}"
+                    ></placetobe-input-box>
+                    <placetobe-input-box
+                      name="Land"
+                      value="{{address.country}}"
+                    ></placetobe-input-box>
+                  </li><!-- 
+                  <li>
+                    <placetobe-input-box disabled name="IBAN" value="[[iban]]"></placetobe-input-box>
+                    <placetobe-input-box disabled name="Naam bij bank" value="[[bankAccountName]]"></placetobe-input-box>
+                  </li>
+                  <li>
+                    <placetobe-input-box disabled name="Huidig belegd vermogen" value="[[currentlyInvestedCapital]]"></placetobe-input-box>
+                    <placetobe-input-box disabled name="Totaal geinvesteerd" value="[[totalInvestments]]"></placetobe-input-box>
+                  </li>
+                  <li>
+                    Geabboneerd op nieuwsbrief: <input type="checkbox" checked="{{subscribedToNewsletter::change}}">
+                  </li>
+                  <li>
+                    Privacy: <input type="checkbox" checked="{{privacy::change}}">
+                  </li> -->
+                </ul>
+                <placetobe-button
+                  title="Opslaan"
+                  slot="footer"
+                  on-tap="saveInvestorDetails"
+                ><span>Sla op</span>
+
+              </article>
+            </placetobe-card>
+
+            <br>
+
+            <placetobe-card title="Betalingsgegevens">
+              <article slot="main">
+                <p>Rekeningnummer of mailadres veranderd? Omwille van de veiligheid wijzigen wij dit voor je. Stuur een mailtje naar info@crowdaboutnow.nl en we zorgen dat het in orde komt.</p>
+                <ul>
+                  <li>
+                    <placetobe-input-box
+                      disabled
+                      name="IBAN"
+                      value="[[iban]]"
+                    ></placetobe-input-box>
+                  </li>
+                  <li>
+                    <placetobe-input-box
+                      disabled
+                      name="Naam bij bank"
+                      value="[[bankAccountName]]"
+                    ></placetobe-input-box>
+                  </li>
+                </ul>
+              </article>
+            </placetobe-card>
+
+          </template>
+
+          <!-- investments -->
+          <template is="dom-if" if="[[_selectedTabEquals(selectedTab, 'investments')]]">
+            <template is="dom-if" if="[[contracts]]">
+              <placetobe-card>
+                <article slot="main">
                 <template is="dom-repeat" items="[[contracts]]" as="contract">
                   <li>
-                    Project Name: [[contract.projectNaam]]
+                  Project Name: [[contract.projectNaam]]
                   </li>
                   <li>
-                    Investering: [[contract.investment]]
+                  Investering: [[contract.investment]]
                   </li>
                   <li>
-                    Date: [[contract.creationDateTime]]
-                  </li>
-
-                </template>
-          </article>
-        </placetobe-card>
-    </template>
-
-    <template is="dom-if" if="[[campaigns]]">
-          <placetobe-card>
-              <article slot="main">
-
-              <template is="dom-repeat" items="[[campaigns]]" as="campaign">
-                <template is="dom-repeat" items="[[campaign.payments]]" as="repayment">
-                  <li>
-                    Project Name: [[repayment.campaignProjectNaam]]
-                  </li>
-                  <li>
-                    Project completed: [[repayment.completed]]
-                  </li>
-                  <li>
-                    Date: [[repayment.date]]
-                  </li>
-                  <li>
-                    Paid Payments: [[repayment.currentPaymentsStatus.paidPayments]]
-                  </li>
-                  <li>
-                    Unpaid Payments: [[repayment.currentPaymentsStatus.unpaidPayments]]
-                  </li>
-                  <li>
-                    Percentage remaining debt: [[repayment.remainingDebtPercentage]]
-                  </li>
-                  <li>
-                    totalAmountThisPayment: [[repayment.totalAmountThisPayment]]
+                  Date: [[contract.creationDateTime]]
                   </li>
                 </template>
-              </template>
-            </article>
+                </article>
+              </placetobe-card>
+            </template>
+          </template>
 
-          </placetobe-card>
+          <!-- agenda -->
+          <template is="dom-if" if="[[_selectedTabEquals(selectedTab, 'agenda')]]">
+            <template is="dom-if" if="[[campaigns]]">
+              <placetobe-card>
+                  <article slot="main">
 
-        </template>
+                  <template is="dom-repeat" items="[[campaigns]]" as="campaign">
+                    <template is="dom-repeat" items="[[campaign.payments]]" as="repayment">
+                      <li>
+                        Project Name: [[repayment.campaignProjectNaam]]
+                      </li>
+                      <li>
+                        Project completed: [[repayment.completed]]
+                      </li>
+                      <li>
+                        Date: [[repayment.date]]
+                      </li>
+                      <li>
+                        Paid Payments: [[repayment.currentPaymentsStatus.paidPayments]]
+                      </li>
+                      <li>
+                        Unpaid Payments: [[repayment.currentPaymentsStatus.unpaidPayments]]
+                      </li>
+                      <li>
+                        Percentage remaining debt: [[repayment.remainingDebtPercentage]]
+                      </li>
+                      <li>
+                        totalAmountThisPayment: [[repayment.totalAmountThisPayment]]
+                      </li>
+                    </template>
+                  </template>
+                </article>
+              </placetobe-card>
+            </template>
+
+          </template>
+
+        </div>
+        <aside>
+        </aside>
+
+      </main>
 
     </template>
 
@@ -226,11 +363,21 @@ Placetobe dashboard for investors
         signedIn: {
           type: Boolean,
           value: false
+        },
+
+        selectedTab: {
+          type: String,
+          value: 'details'
         }
+
       },
       observers: [
         '_setUserParameters(_tokenData.data.*)'
       ],
+
+      _selectedTabEquals: function(selectedTab, value) {
+        return selectedTab === value;
+      },
 
       _setUserParameters: function (tokenDataChange) {
         this.userId = this._tokenData.data.userId;
@@ -238,7 +385,6 @@ Placetobe dashboard for investors
 
       saveInvestorDetails: function () {
         this.$$('#investor').save();
-        this.$$('#investor').saveNewsletterSubscription();
       }
 
     });

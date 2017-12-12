@@ -4,14 +4,15 @@
   "main": "placetobe-investor-dashboard.html",
   "dependencies": {
     "polymer": "Polymer/polymer#^1.4.0",
-    "placetobe-styles": "Placetobe/placetobe-styles",    
+    "placetobe-styles": "Placetobe/placetobe-styles",
     "caas-auth-behavior": "CaasElements/caas-auth-behavior",
-    "caas-investor": "CaasElements/caas-investor",    
+    "caas-investor": "CaasElements/caas-investor",
     "placetobe-signin-card": "Placetobe/placetobe-signin-card",
-    "placetobe-card": "Placetobe/placetobe-card",    
-    "placetobe-input-box": "Placetobe/placetobe-input-box",    
-    "placetobe-mailinglist-subscribe-form": "Placetobe/placetobe-mailinglist-subscribe-form"   
-    
+    "placetobe-card": "Placetobe/placetobe-card",
+    "placetobe-input-box": "Placetobe/placetobe-input-box",
+    "placetobe-mailinglist-subscribe-form": "Placetobe/placetobe-mailinglist-subscribe-form",
+    "iron-selector": "PolymerElements/iron-selector#^2.0.1",
+    "placetobe-navigation-bar": "Placetobe/placetobe-navigation-bar"
   },
   "devDependencies": {
     "iron-component-page": "PolymerElements/iron-component-page#^1.0.0",
@@ -19,5 +20,8 @@
     "web-component-tester": "^4.0.0",
     "webcomponentsjs": "webcomponents/webcomponentsjs#^0.7.0",
     "caas-session": "CaasElements/caas-session"
+  },
+  "resolutions": {
+    "iron-selector": "^1.0.0"
   }
 }
