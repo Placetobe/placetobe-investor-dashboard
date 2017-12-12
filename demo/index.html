@@ -17,6 +17,7 @@
 
     <link rel="import" href="../../iron-demo-helpers/demo-pages-shared-styles.html">
     <link rel="import" href="../../iron-demo-helpers/demo-snippet.html">
+    <link rel="import" href="../../caas-session/caas-session.html">
     <link rel="import" href="../placetobe-investor-dashboard.html">
 
     <style is="custom-style" include="demo-pages-shared-styles">
@@ -44,8 +45,20 @@
     </style>
   </head>
   <body>
+
+    <template is="dom-bind" id="demo" api-endpoint="[[apiEndPoint]]">
+
+      <caas-session></caas-session>
+
       <placetobe-investor-dashboard
-        api-endpoint="https://developmentapi.crowdaboutnow.nl/"
+        api-endpoint="[[apiEndPoint]]"
       ></placetobe-investor-dashboard>
+
+      <script>
+        demo.apiEndPoint = 'https://developmentapi.crowdaboutnow.nl/';
+      </script>
+
+    </template>
+
   </body>
 </html>
