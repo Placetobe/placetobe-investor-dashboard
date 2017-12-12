@@ -85,7 +85,7 @@ Placetobe dashboard for investors
         linkedin="{{linkedin}}"
         address="{{address}}"
         currently-invested-capital="{{currentlyInvestedCapital}}"
-        total-investments="{{totalInvestments}}"
+        total-investment="{{totalInvestments}}"
         campaigns="{{campaigns}}"
         contracts="{{contracts}}"
       ></caas-investor>
@@ -112,6 +112,10 @@ Placetobe dashboard for investors
             <li>
               <placetobe-input-box disabled name="IBAN" value="[[iban]]"></placetobe-input-box>
               <placetobe-input-box disabled name="Naam bij bank" value="[[bankAccountName]]"></placetobe-input-box>
+            </li>
+            <li>
+              <placetobe-input-box disabled name="Huidig belegd vermogen" value="[[currentlyInvestedCapital]]"></placetobe-input-box>
+              <placetobe-input-box disabled name="Totaal geinvesteerd" value="[[totalInvestments]]"></placetobe-input-box>
             </li>
             <li>
               Geabboneerd op nieuwsbrief: <input type="checkbox" checked="{{subscribedToNewsletter::change}}">
@@ -148,12 +152,12 @@ Placetobe dashboard for investors
         </placetobe-card>
     </template>
 
-    <template is="dom-if" if="[[campaigns.payments]]">
+    <template is="dom-if" if="[[campaigns]]">
           <placetobe-card>
               <article slot="main">
 
-              <template is="dom-repeat" items="[[campaigns]]">
-                <template is="dom-repeat" items="[[item.payments]]" as="repayment">
+              <template is="dom-repeat" items="[[campaigns]]" as="campaign">
+                <template is="dom-repeat" items="[[campaign.payments]]" as="repayment">
                   <li>
                     Project Name: [[repayment.campaignProjectNaam]]
                   </li>
