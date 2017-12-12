@@ -40,6 +40,7 @@ Placetobe dashboard for investors
         flex-direction: horizontal;
         flex-basis: wrap;
         --placetobe-card-color: #eee;
+        margin-bottom: var(--placetobe-margin);
       }
 
       :host ul {
@@ -111,6 +112,15 @@ Placetobe dashboard for investors
 
       :host main > *:nth-child(2) {
         @apply(--placetobe-flex-item--1);
+      }
+
+      :host main article {
+        @apply --placetobe-font-body-serif;
+      }
+
+      :host main article h3 {
+        @apply --placetobe-font-heading6;
+        margin-bottom: var(--placetobe-margin);
       }
 
       /* end shared page style?? */
@@ -234,8 +244,6 @@ Placetobe dashboard for investors
               </article>
             </placetobe-card>
 
-            <br>
-
             <placetobe-card title="Betalingsgegevens">
               <article slot="main">
                 <p>Rekeningnummer of mailadres veranderd? Omwille van de veiligheid wijzigen wij dit voor je. Stuur een mailtje naar info@crowdaboutnow.nl en we zorgen dat het in orde komt.</p>
@@ -263,21 +271,18 @@ Placetobe dashboard for investors
           <!-- investments -->
           <template is="dom-if" if="[[_selectedTabEquals(selectedTab, 'investments')]]">
             <template is="dom-if" if="[[contracts]]">
-              <placetobe-card>
-                <article slot="main">
-                <template is="dom-repeat" items="[[contracts]]" as="contract">
-                  <li>
-                  Project Name: [[contract.projectNaam]]
-                  </li>
-                  <li>
-                  Investering: [[contract.investment]]
-                  </li>
-                  <li>
-                  Date: [[contract.creationDateTime]]
-                  </li>
-                </template>
-                </article>
-              </placetobe-card>
+              <template is="dom-repeat" items="[[contracts]]" as="contract">
+                <placetobe-card title="[[contract.projectNaam]]">
+                  <article slot="main">                    
+                    <h3>[[_parseStatusName(contract.status)]]</h3>
+
+                    <div><strong>Datum:</strong>   [[contract.creationDateTime]]</div>
+                    <div><strong>Geïnvesteerd bedrag:</strong>   €[[contract.investment]]</div>
+                    <span hidden$="[[!contract.incentive]]">
+                    <div><strong>Beloning:</strong>  [[contract.incentive]]</div>
+                  </article>
+                </placetobe-card>
+              </template>
             </template>
           </template>
 
@@ -367,7 +372,7 @@ Placetobe dashboard for investors
 
         selectedTab: {
           type: String,
-          value: 'details'
+          value: 'investments'
         }
 
       },
@@ -385,6 +390,23 @@ Placetobe dashboard for investors
 
       saveInvestorDetails: function () {
         this.$$('#investor').save();
+      },
+
+      _parseStatusName: function(contractStatus) {
+        switch(contractStatus) {
+          case 1:
+            return 'campagne lopend';
+            break;
+          case 2:
+            return 'campagne geslaagd';
+            break;
+          case 4:
+            return 'campagne afbetaald';
+            break;
+          case 5:
+            return 'campagne niet succesvol';
+            break;
+        }
       }
 
     });
