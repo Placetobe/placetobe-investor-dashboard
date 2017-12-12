@@ -6,7 +6,12 @@
     "polymer": "Polymer/polymer#^1.4.0",
     "placetobe-styles": "Placetobe/placetobe-styles",    
     "caas-auth-behavior": "CaasElements/caas-auth-behavior",
-    "placetobe-signin-card": "Placetobe/placetobe-signin-card"   
+    "caas-investor": "CaasElements/caas-investor",    
+    "placetobe-signin-card": "Placetobe/placetobe-signin-card",
+    "placetobe-card": "Placetobe/placetobe-card",    
+    "placetobe-input-box": "Placetobe/placetobe-input-box",    
+    "placetobe-mailinglist-subscribe-form": "Placetobe/placetobe-mailinglist-subscribe-form"   
+    
   },
   "devDependencies": {
     "iron-component-page": "PolymerElements/iron-component-page#^1.0.0",
