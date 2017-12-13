@@ -238,10 +238,6 @@ Placetobe dashboard for investors
           <!-- details -->
           <template is="dom-if" if="[[_selectedTabEquals(selectedTab, 'details')]]">
 
-            <article class="warning">
-              Lukt het niet om je contract te downloaden? Check of je pop-up blocker uit staat.
-            </article>
-
             <placetobe-card title="Jouw gegevens">
               <article slot="main">
                 <ul>
@@ -322,6 +318,11 @@ Placetobe dashboard for investors
           <!-- investments -->
           <template is="dom-if" if="[[_selectedTabEquals(selectedTab, 'investments')]]">
             <template is="dom-if" if="[[contracts]]">
+
+              <article class="warning">
+                Lukt het niet om je contract te downloaden? Check of je pop-up blocker uit staat.
+              </article>
+
               <template is="dom-repeat" items="[[contracts]]" as="contract">
                 <placetobe-card title="[[contract.projectNaam]]">
                   <article slot="main">                    
