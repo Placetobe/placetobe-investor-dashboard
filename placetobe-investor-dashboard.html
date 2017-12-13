@@ -181,16 +181,37 @@ Placetobe dashboard for investors
 
                     <div><strong>Geïnvesteerd bedrag:</strong>   €[[contract.investment]]</div>
                     <div><strong>Datum investering:</strong>   [[contract.creationDateTime]]</div>
+                    <div><strong>Duur:</strong>  van [[contract.deadlineDate]] tot [[contract.finalPaymentDate]] </div>
                     <span hidden$="[[!contract.incentive]]">
                       <div><strong>Beloning:</strong>  [[contract.incentive]]</div>
                     </span>
-                    <p>
+
+                    <placetobe-input-box
+                      type="checkbox"
+                      name="Privacy"
+                      checked="{{contract.privacy}}"
+                      on-change="updatePrivacy"
+                    ></placetobe-input-box>
+
+                    <span id="privacyfeedback[[contract.id]]" hidden>Opgeslagen</span>
+
                     <placetobe-button
                           title="Download contract"
                           slot="footer"
                           on-tap="downloadContract"
                         ><span>Download contract</span>
                     </placetobe-button>
+
+                    <iron-ajax
+                      id="updatePrivacy[[contract.id]]"
+                      headers='[[_authHeader]]'
+                      body="[[contract]]"
+                      content-type="application/json"
+                      url="[[apiEndpoint]]/investors/[[userId]]/contracts/[[contract.id]]/privacy"
+                      method="PUT"
+                      on-response="_handlePrivacySettingsSaved"
+                      on-error="_handlePrivacySettingsError">
+                    </iron-ajax>
 
                     <iron-ajax
                       id="contractDownload[[contract.id]]"
@@ -389,7 +410,6 @@ Placetobe dashboard for investors
           this.$.signInCard.signOut();
       },
       downloadContract: function(evt) {
-          console.log(evt.model.contract.id);
           this.$$("#contractDownload" + evt.model.contract.id).generateRequest();
       },
       _handleDownloadFailed: function() {
@@ -415,6 +435,21 @@ Placetobe dashboard for investors
           }
           return this.fire('response', this.lastResponse || null);
       },
+
+      updatePrivacy: function(evt) {
+          console.log(evt.model.contract.id);
+          this.$$("#updatePrivacy" + evt.model.contract.id).generateRequest();
+
+      },
+
+      _handlePrivacySettingsSaved: function(evt) {
+          this.$$("#privacyfeedback" + evt.model.contract.id).hidden = false
+      },
+
+      _handlePrivacySettingsError: function(evt) {
+          alert('Er ging iets mis bij het opslaan van je privacy instellingen');
+      }
+
 
     });
   </script>
