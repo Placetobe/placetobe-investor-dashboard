@@ -162,6 +162,10 @@ Placetobe dashboard for investors
 
       /* end shared page style?? */
 
+      .warning {
+        padding-bottom: var(--placetobe-margin);
+      }
+
       placetobe-campaign-progress-bar {
         margin: var(--placetobe-margin) 0;
       }
@@ -233,6 +237,10 @@ Placetobe dashboard for investors
 
           <!-- details -->
           <template is="dom-if" if="[[_selectedTabEquals(selectedTab, 'details')]]">
+
+            <article class="warning">
+              Lukt het niet om je contract te downloaden? Check of je pop-up blocker uit staat.
+            </article>
 
             <placetobe-card title="Jouw gegevens">
               <article slot="main">
@@ -332,8 +340,8 @@ Placetobe dashboard for investors
           <!-- agenda -->
           <template is="dom-if" if="[[_selectedTabEquals(selectedTab, 'agenda')]]">
 
-            <article>
-              <i>Let op: Onderstaand schema is slechts een indicatie op basis van de terugbetalingsschema's van campagnes waarin jij hebt geïnvesteerd en houdt geen rekening met daadwerkelijke betalingen en eventuele herstructureringen. Derhalve kunnen aan dit bedrag geen rechten worden ontleend.</i></p>
+            <article class="warning">
+             Let op: Onderstaand schema is slechts een indicatie op basis van de terugbetalingsschema's van campagnes waarin jij hebt geïnvesteerd en houdt geen rekening met daadwerkelijke betalingen en eventuele herstructureringen. Derhalve kunnen aan dit bedrag geen rechten worden ontleend.
             </article>
 
             <template is="dom-if" if="[[campaigns]]">
