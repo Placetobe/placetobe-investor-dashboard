@@ -23,68 +23,9 @@ Placetobe dashboard for investors
 <dom-module id="placetobe-investor-dashboard">
   <template>
     <style include="placetobe-dashboard-styles">
-      :host {
-        display: block;
-        @apply --placetobe-flex-layout--vertical;
-        @apply --placetobe-cross-align--center;
-      }
-      placetobe-signin-card {
-        width: 100%;
-        max-width: 540px;
-      }
-      placetobe-signin-card[hidden] {
-        display: none;
-      }
-
-      placetobe-card {
-        width: 100%;
-        display: flex;
-        flex-direction: horizontal;
-        flex-basis: wrap;
-        --placetobe-card-color: var(--placetobe-color-gray);
-        margin-bottom: var(--placetobe-margin);
-      }
-
-      :host ul {
-        list-style: none;
-        padding: 0;
-      }
-
-      li {
-        display: flex;
-        padding-bottom: 5px;
-        display: flex;
-        flex-direction: horizontal;
-        flex-basis: wrap;
-      }
-      placetobe-input-box {
-        flex: 1;
-        padding: 0 3px;
-       --input-box-disabled-background-color: var(-placetobe-color-yellow);
-      }
-
-      :host placetobe-navigation-bar {
-        position: relative;
-        z-index: 9;
-        width: 100%;
-      }
-
-      .warning {
-        padding-bottom: var(--placetobe-margin);
-      }
-
-      placetobe-campaign-progress-bar {
-        margin: var(--placetobe-margin) 0;
-      }
-
-      aside placetobe-card {
-        --placetobe-card-color: var(--placetobe-color-yellow);
-      }
-
       [hidden] {
         display: none!important;
       }
-
     </style>
 
     <placetobe-signin-card
