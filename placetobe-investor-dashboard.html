@@ -68,7 +68,7 @@ Placetobe dashboard for investors
         z-index: 9;
         width: 100%;
       }
-      
+
       .warning {
         padding-bottom: var(--placetobe-margin);
       }
@@ -117,6 +117,7 @@ Placetobe dashboard for investors
         total-investment="{{totalInvestments}}"
         campaigns="{{campaigns}}"
         contracts="{{contracts}}"
+        response-status="{{responseStatus}}"
       ></caas-investor>
 
       <placetobe-navigation-bar>
@@ -190,10 +191,12 @@ Placetobe dashboard for investors
                   </li>
                 </ul>
                 <placetobe-button
-                  title="Opslaan"
-                  slot="footer"
-                  on-tap="saveInvestorDetails"
-                ><span>Opslaan</span>
+                      title="Opslaan"
+                      slot="footer"
+                      on-tap="saveInvestorDetails"
+                    ><span>Opslaan</span>
+                </placetobe-button>
+                <span>[[responseStatus.status]]</span>
 
               </article>
             </placetobe-card>
@@ -232,13 +235,31 @@ Placetobe dashboard for investors
 
               <template is="dom-repeat" items="[[contracts]]" as="contract">
                 <placetobe-card title="[[contract.projectNaam]]">
-                  <article slot="main">                    
+                  <article slot="main">
                     <h3>[[_parseStatusName(contract.status)]]</h3>
 
                     <div><strong>Geïnvesteerd bedrag:</strong>   €[[contract.investment]]</div>
                     <div><strong>Datum investering:</strong>   [[contract.creationDateTime]]</div>
                     <span hidden$="[[!contract.incentive]]">
-                    <div><strong>Beloning:</strong>  [[contract.incentive]]</div>
+                      <div><strong>Beloning:</strong>  [[contract.incentive]]</div>
+                    </span>
+                    <placetobe-button
+                          title="Download contract"
+                          slot="footer"
+                          on-tap="downloadContract"
+                        ><span>Download contract</span>
+                    </placetobe-button>
+
+                    <iron-ajax
+                      id="contractDownload[[contract.id]]"
+                      headers='[[_authHeader]]'
+                      url="[[apiEndpoint]]/investors/[[userId]]/contracts/[[contract.id]]/download"
+                      method="GET"
+                      handle-as="arraybuffer"
+                      on-response="_handleDownload"
+                      on-error="_handleDownloadFailed">
+                    </iron-ajax>
+
                   </article>
                 </placetobe-card>
               </template>
@@ -272,7 +293,7 @@ Placetobe dashboard for investors
                         <strong>totaal:</strong> €[[_parseAmount(repayment.totalAmount)]]
                         </p>
                       </template>
-                      
+
                   </article>
                 </placetobe-card>
               </template>
@@ -293,9 +314,9 @@ Placetobe dashboard for investors
             <article slot="main">
 
               <h3>€[[currentlyInvestedCapital]]</h3>
-              
+
               <small>Let op: Bovenstaand bedrag is slechts een indicatie op basis van de terugbetalingsschema's van campagnes waarin jij hebt geïnvesteerd en houdt geen rekening met daadwerkelijke terugbetalingen en eventuele herstructureringen. Derhalve kunnen aan dit bedrag geen rechten worden ontleend.</small>
-            </article>            
+            </article>
           </placetobe-card>
 
         </aside>
@@ -421,7 +442,37 @@ Placetobe dashboard for investors
             return 'campagne niet succesvol';
             break;
         }
-      }
+      },
+      signOut: function() {
+          this.$.signInCard.signOut();
+      },
+      downloadContract: function(evt) {
+          console.log(evt.model.contract.id);
+          this.$$("#contractDownload" + evt.model.contract.id).generateRequest();
+      },
+      _handleDownloadFailed: function() {
+          alert('Er ging iets mis bij het downloaden van het contract');
+      },
+      _handleDownload: function (evt, data) {
+          var _self = this;
+          var a = document.createElement('a');
+          document.body.appendChild(a);
+          a.setAttribute('hidden', true);
+          var blob = new Blob([data.xhr.response], {type: _self.contentType});
+          if(window.navigator.msSaveOrOpenBlob) {
+              window.navigator.msSaveOrOpenBlob(blob, 'contract.pdf');
+          } else {
+              var url = window.URL.createObjectURL(blob);
+              a.href = url;
+              a.download = 'contract.pdf';
+              a.click();
+              setTimeout(function(){
+                  document.body.removeChild(a);
+                  window.URL.revokeObjectURL(url);
+              }, 100);
+          }
+          return this.fire('response', this.lastResponse || null);
+      },
 
     });
   </script>
