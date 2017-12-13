@@ -40,7 +40,7 @@ Placetobe dashboard for investors
         display: flex;
         flex-direction: horizontal;
         flex-basis: wrap;
-        --placetobe-card-color: #eee;
+        --placetobe-card-color: var(--placetobe-color-gray);
         margin-bottom: var(--placetobe-margin);
       }
 
@@ -165,6 +165,15 @@ Placetobe dashboard for investors
       placetobe-campaign-progress-bar {
         margin: var(--placetobe-margin) 0;
       }
+
+      aside placetobe-card {
+        --placetobe-card-color: var(--placetobe-color-yellow);
+      }
+
+      [hidden] {
+        display: none!important;
+      }
+
     </style>
 
     <placetobe-signin-card
@@ -267,27 +276,13 @@ Placetobe dashboard for investors
                       name="Land"
                       value="{{address.country}}"
                     ></placetobe-input-box>
-                  </li><!-- 
-                  <li>
-                    <placetobe-input-box disabled name="IBAN" value="[[iban]]"></placetobe-input-box>
-                    <placetobe-input-box disabled name="Naam bij bank" value="[[bankAccountName]]"></placetobe-input-box>
                   </li>
-                  <li>
-                    <placetobe-input-box disabled name="Huidig belegd vermogen" value="[[currentlyInvestedCapital]]"></placetobe-input-box>
-                    <placetobe-input-box disabled name="Totaal geinvesteerd" value="[[totalInvestments]]"></placetobe-input-box>
-                  </li>
-                  <li>
-                    Geabboneerd op nieuwsbrief: <input type="checkbox" checked="{{subscribedToNewsletter::change}}">
-                  </li>
-                  <li>
-                    Privacy: <input type="checkbox" checked="{{privacy::change}}">
-                  </li> -->
                 </ul>
                 <placetobe-button
                   title="Opslaan"
                   slot="footer"
                   on-tap="saveInvestorDetails"
-                ><span>Sla op</span>
+                ><span>Opslaan</span>
 
               </article>
             </placetobe-card>
@@ -338,7 +333,7 @@ Placetobe dashboard for investors
           <template is="dom-if" if="[[_selectedTabEquals(selectedTab, 'agenda')]]">
 
             <article>
-              Let op: Onderstaand schema is slechts een indicatie op basis van de terugbetalingsschema's van campagnes waarin jij hebt geïnvesteerd en houdt geen rekening met daadwerkelijke betalingen en eventuele herstructureringen. Derhalve kunnen aan dit bedrag geen rechten worden ontleend.</p>
+              <i>Let op: Onderstaand schema is slechts een indicatie op basis van de terugbetalingsschema's van campagnes waarin jij hebt geïnvesteerd en houdt geen rekening met daadwerkelijke betalingen en eventuele herstructureringen. Derhalve kunnen aan dit bedrag geen rechten worden ontleend.</i></p>
             </article>
 
             <template is="dom-if" if="[[campaigns]]">
@@ -371,6 +366,22 @@ Placetobe dashboard for investors
 
         </div>
         <aside>
+
+          <placetobe-card title="Totaal Geïnvesteerd" hidden$="[[!totalInvestments]]">
+            <article slot="main">
+              <h3>€[[totalInvestments]]</h3>
+            </article>
+          </placetobe-card>
+
+          <placetobe-card title="Belegd vermogen" hidden$="[[!currentlyInvestedCapital]]">
+            <article slot="main">
+
+              <h3>€[[currentlyInvestedCapital]]</h3>
+              
+              <small>Let op: Bovenstaand bedrag is slechts een indicatie op basis van de terugbetalingsschema's van campagnes waarin jij hebt geïnvesteerd en houdt geen rekening met daadwerkelijke terugbetalingen en eventuele herstructureringen. Derhalve kunnen aan dit bedrag geen rechten worden ontleend.</small>
+            </article>            
+          </placetobe-card>
+
         </aside>
 
       </main>
@@ -418,7 +429,17 @@ Placetobe dashboard for investors
 
         selectedTab: {
           type: String,
-          value: 'agenda'
+          value: 'details'
+        },
+
+        totalInvestments: {
+          type: String,
+          value: null
+        },
+
+        currentlyInvestedCapital: {
+          type: String,
+          value: null
         }
 
       },
