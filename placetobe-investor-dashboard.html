@@ -10,6 +10,7 @@
 <link rel="import" href="../placetobe-button/placetobe-button.html">
 
 <link rel="import" href="../placetobe-navigation-bar/placetobe-navigation-bar.html">
+<link rel="import" href="../placetobe-campaign-progress-bar/placetobe-campaign-progress-bar.html">
 
 <!--
 `placetobe-investor-dashboard`
@@ -69,6 +70,42 @@ Placetobe dashboard for investors
 
       /* shared page style?? */
 
+      :host header {
+        max-width: var(--placetobe-two-column-width);
+        margin-left: auto;
+        margin-right: auto;     
+        padding: 0 var(--placetobe-margin);
+        text-align: center;   
+      }
+
+      :host header {
+        margin-top: calc( var(--placetobe-margin) * 3 );
+        margin-bottom: var(--placetobe-margin);
+        position: relative;
+        z-index: 1;
+      }
+
+      :host header h1 {
+        @apply(--placetobe-font-title);
+        text-align: center;
+        margin-bottom: var(--placetobe-margin);
+      }
+
+      :host header h2 {
+        @apply(--placetobe-font-heading1-regular);
+        margin-bottom:  var(--placetobe-margin);
+        text-align: center;
+      }
+
+      :host header placetobe-button {
+        margin: var(--placetobe-margin);
+      }
+
+      :host header placetobe-button.iron-selected {
+        --placetobe-button-tint-color: var(--placetobe-color-taupe);
+        --placetobe-button-tint-hover-color: var(--placetobe-color-taupe);
+      }
+
       :host main {
         @apply(--placetobe-border-box);
         @apply(--placetobe-flex-layout--vertical);
@@ -124,6 +161,10 @@ Placetobe dashboard for investors
       }
 
       /* end shared page style?? */
+
+      placetobe-campaign-progress-bar {
+        margin: var(--placetobe-margin) 0;
+      }
     </style>
 
     <placetobe-signin-card
@@ -160,16 +201,23 @@ Placetobe dashboard for investors
 
       <placetobe-navigation-bar>
         <li slot="navigation">Dashboard Investeerders</li>
+        <placetobe-button
+          slot="footer"
+          on-tap="signOut"
+        >Uitloggen</placetobe-button>
+      </placetobe-navigation-bar>
+
+      <header>
+        <h1>[[firstName]] [[lastName]]</h1>
+        <h2>Welkom. Hier kun je je contactgegevens bekijken en je investeringen inzien.</h2>
 
         <iron-selector slot="footer" selected="{{selectedTab}}" attr-for-selected="data-name">
           <placetobe-button link data-name="details">Details</placetobe-button>
           <placetobe-button link data-name="investments">Investeringen</placetobe-button>
           <placetobe-button link data-name="agenda">Terugbetalingen</placetobe-button>
-          <placetobe-button
-            on-tap="signOut"
-          >Sign Out</placetobe-button>
         </iron-selector>
-      </placetobe-navigation-bar>
+
+      </header>
 
       <main>
         <div>
@@ -276,8 +324,8 @@ Placetobe dashboard for investors
                   <article slot="main">                    
                     <h3>[[_parseStatusName(contract.status)]]</h3>
 
-                    <div><strong>Datum:</strong>   [[contract.creationDateTime]]</div>
                     <div><strong>Geïnvesteerd bedrag:</strong>   €[[contract.investment]]</div>
+                    <div><strong>Datum investering:</strong>   [[contract.creationDateTime]]</div>
                     <span hidden$="[[!contract.incentive]]">
                     <div><strong>Beloning:</strong>  [[contract.incentive]]</div>
                   </article>
@@ -288,37 +336,35 @@ Placetobe dashboard for investors
 
           <!-- agenda -->
           <template is="dom-if" if="[[_selectedTabEquals(selectedTab, 'agenda')]]">
+
+            <article>
+              Let op: Onderstaand schema is slechts een indicatie op basis van de terugbetalingsschema's van campagnes waarin jij hebt geïnvesteerd en houdt geen rekening met daadwerkelijke betalingen en eventuele herstructureringen. Derhalve kunnen aan dit bedrag geen rechten worden ontleend.</p>
+            </article>
+
             <template is="dom-if" if="[[campaigns]]">
-              <placetobe-card>
+              <template is="dom-repeat" items="[[campaigns]]" as="campaign">
+
+                <placetobe-card title="[[_getProjectNaamById(campaign.id, campaign.payments.*)]]">
                   <article slot="main">
 
-                  <template is="dom-repeat" items="[[campaigns]]" as="campaign">
-                    <template is="dom-repeat" items="[[campaign.payments]]" as="repayment">
-                      <li>
-                        Project Name: [[repayment.campaignProjectNaam]]
-                      </li>
-                      <li>
-                        Project completed: [[repayment.completed]]
-                      </li>
-                      <li>
-                        Date: [[repayment.date]]
-                      </li>
-                      <li>
-                        Paid Payments: [[repayment.currentPaymentsStatus.paidPayments]]
-                      </li>
-                      <li>
-                        Unpaid Payments: [[repayment.currentPaymentsStatus.unpaidPayments]]
-                      </li>
-                      <li>
-                        Percentage remaining debt: [[repayment.remainingDebtPercentage]]
-                      </li>
-                      <li>
-                        totalAmountThisPayment: [[repayment.totalAmountThisPayment]]
-                      </li>
-                    </template>
-                  </template>
-                </article>
-              </placetobe-card>
+                      <placetobe-campaign-progress-bar
+                        funded-label="terugbetaald"
+                        currenty-funded="[[_getProjectPaidById(campaign.id, campaign.payments.*)]]"
+                        maximum-funding="[[_getProjectDebtById(campaign.id, campaign.payments.*)]]"
+                      ></placetobe-campaign-progress-bar>
+
+                      <template is="dom-repeat" items="[[campaign.payments]]" as="repayment">
+                        <p>
+                        <strong>[[repayment.date]]</strong><br>
+                        <strong>aflossing:</strong> €[[_parseAmount(repayment.shareAmount)]]<br>
+                        <strong>rente:</strong> €[[_parseAmount(repayment.shareRate)]]<br>
+                        <strong>totaal:</strong> €[[_parseAmount(repayment.totalAmount)]]
+                        </p>
+                      </template>
+                      
+                  </article>
+                </placetobe-card>
+              </template>
             </template>
 
           </template>
@@ -372,13 +418,44 @@ Placetobe dashboard for investors
 
         selectedTab: {
           type: String,
-          value: 'investments'
+          value: 'agenda'
         }
 
       },
       observers: [
         '_setUserParameters(_tokenData.data.*)'
       ],
+
+      _getProjectById: function(campaignId, repayments) {
+        var projects = repayments.filter(function(repayment) {
+          return repayment.campaignId == campaignId
+        })
+        return (projects && projects[0]) ? projects[0] : {};
+      },
+
+      _getProjectNaamById: function(campaignId, repaymentsChange) {
+        var project = this._getProjectById(campaignId, repaymentsChange.base);
+        return project.campaignProjectNaam || '';
+      },
+
+      _getProjectDebtById: function(campaignId, repaymentsChange) {
+        var project = this._getProjectById(campaignId, repaymentsChange.base);
+        return project.unpaidPayments || '';
+      },
+
+      _getProjectPaidById: function(campaignId, repaymentsChange) {
+        var project = this._getProjectById(campaignId, repaymentsChange.base);
+        return project.paidPayments || '';
+      },
+
+      _getProjectDebtById: function(campaignId, repaymentsChange) {
+        var project = this._getProjectById(campaignId, repaymentsChange.base);
+        return project.unpaidPayments || '';
+      },
+
+      _parseAmount: function(number) {
+        return number.toFixed(2);
+      },
 
       _selectedTabEquals: function(selectedTab, value) {
         return selectedTab === value;
