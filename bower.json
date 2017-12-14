@@ -13,6 +13,7 @@
     "placetobe-mailinglist-subscribe-form": "Placetobe/placetobe-mailinglist-subscribe-form",
     "iron-selector": "PolymerElements/iron-selector#^2.0.1",
     "placetobe-navigation-bar": "Placetobe/placetobe-navigation-bar",
+    "placetobe-checkbox": "Placetobe/placetobe-checkbox",
     "placetobe-campaign-progress-bar": "Placetobe/placetobe-campaign-progress-bar"
   },
   "devDependencies": {
@@ -23,6 +24,7 @@
     "caas-session": "CaasElements/caas-session"
   },
   "resolutions": {
-    "iron-selector": "^1.0.0"
+    "iron-selector": "^1.0.0",
+    "iron-icons": "^1.0.0"
   }
 }

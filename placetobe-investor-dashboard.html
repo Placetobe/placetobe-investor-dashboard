@@ -11,6 +11,7 @@
 <link rel="import" href="../placetobe-button/placetobe-button.html">
 
 <link rel="import" href="../placetobe-navigation-bar/placetobe-navigation-bar.html">
+<link rel="import" href="../placetobe-checkbox/placetobe-checkbox.html">
 <link rel="import" href="../placetobe-campaign-progress-bar/placetobe-campaign-progress-bar.html">
 
 <!--
@@ -186,12 +187,11 @@ Placetobe dashboard for investors
                       <div><strong>Beloning:</strong>  [[contract.incentive]]</div>
                     </span>
 
-                    <placetobe-input-box
-                      type="checkbox"
-                      name="Privacy"
+                    <placetobe-checkbox
+                      label="Privacy"
                       checked="{{contract.privacy}}"
-                      on-change="updatePrivacy"
-                    ></placetobe-input-box>
+                      on-tap="updatePrivacy"
+                    ></placetobe-checkbox>
 
                     <span id="privacyfeedback[[contract.id]]" hidden>Opgeslagen</span>
 
