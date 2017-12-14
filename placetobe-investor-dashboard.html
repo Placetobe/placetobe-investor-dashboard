@@ -427,6 +427,7 @@ Placetobe dashboard for investors
               var url = window.URL.createObjectURL(blob);
               a.href = url;
               a.download = 'contract.pdf';
+              a.target = '_blank';
               a.click();
               setTimeout(function(){
                   document.body.removeChild(a);
