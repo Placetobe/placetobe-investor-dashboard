@@ -60,7 +60,7 @@ Placetobe dashboard for investors
         total-investment="{{totalInvestments}}"
         campaigns="{{campaigns}}"
         contracts="{{contracts}}"
-        response-status="{{responseStatus}}"
+        saving-profile="{{savingProfile}}"
       ></caas-investor>
 
       <placetobe-navigation-bar>
@@ -138,9 +138,9 @@ Placetobe dashboard for investors
                       title="Opslaan"
                       slot="footer"
                       on-tap="saveInvestorDetails"
+                      waiting="[[savingProfile]]"
                     ><span>Opslaan</span>
                 </placetobe-button>
-                <span>[[responseStatus.status]]</span>
 
               </article>
             </placetobe-card>
@@ -195,7 +195,7 @@ Placetobe dashboard for investors
                       on-tap="updatePrivacy"
                     ></placetobe-checkbox>
 
-                    <span id="privacyfeedback[[contract.id]]" hidden>Opgeslagen</span>
+                    <paper-spinner-lite active="[[savingPrivacy]]"></paper-spinner-lite>
 
                     <placetobe-button
                           title="Download contract"
@@ -212,8 +212,9 @@ Placetobe dashboard for investors
                       url="[[apiEndpoint]]/investors/[[userId]]/contracts/[[contract.id]]/privacy"
                       method="PUT"
                       on-response="_handlePrivacySettingsSaved"
-                      on-error="_handlePrivacySettingsError">
-                    </iron-ajax>
+                      on-error="_handlePrivacySettingsError"
+                      loading="{{savingPrivacy}}"
+                    ></iron-ajax>
 
                     <iron-ajax
                       id="contractDownload[[contract.id]]"
