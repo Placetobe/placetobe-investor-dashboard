@@ -1,5 +1,6 @@
 <link rel="import" href="../polymer/polymer.html">
 <link rel="import" href="../iron-selector/iron-selector.html">
+<link rel="import" href="../paper-spinner/paper-spinner-lite.html">
 <link rel="import" href="../placetobe-styles/placetobe-styles.html">
 <link rel="import" href="../placetobe-styles/placetobe-dashboard-styles.html">
 <link rel="import" href="../caas-auth-behavior/caas-auth-behavior.html">
@@ -79,10 +80,11 @@ Placetobe dashboard for investors
           <placetobe-button link data-name="investments">Investeringen</placetobe-button>
           <placetobe-button link data-name="agenda">Terugbetalingen</placetobe-button>
         </iron-selector>
-
+        <paper-spinner-lite active="[[!totalInvestments]]"></paper-spinner-lite>
       </header>
 
-      <main>
+
+      <main hidden$="[[!totalInvestments]]">
         <div>
 
           <!-- details -->
@@ -317,6 +319,7 @@ Placetobe dashboard for investors
         address: {
           type: Object
         },
+
         privacy: {
             type: Boolean,
             value: false
@@ -340,7 +343,7 @@ Placetobe dashboard for investors
         currentlyInvestedCapital: {
           type: String,
           value: null
-        }
+        },
 
       },
       observers: [

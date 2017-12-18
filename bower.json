@@ -14,7 +14,8 @@
     "iron-selector": "PolymerElements/iron-selector#^2.0.1",
     "placetobe-navigation-bar": "Placetobe/placetobe-navigation-bar",
     "placetobe-checkbox": "Placetobe/placetobe-checkbox",
-    "placetobe-campaign-progress-bar": "Placetobe/placetobe-campaign-progress-bar"
+    "placetobe-campaign-progress-bar": "Placetobe/placetobe-campaign-progress-bar",
+    "paper-spinner": "PolymerElements/paper-spinner#^2.0.0"
   },
   "devDependencies": {
     "iron-component-page": "PolymerElements/iron-component-page#^1.0.0",
