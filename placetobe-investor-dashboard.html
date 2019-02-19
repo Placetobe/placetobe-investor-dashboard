@@ -39,12 +39,13 @@ Placetobe dashboard for investors
       user-role="investor"
     ></placetobe-signin-card>
 
-    <template is="dom-if" if="[[userId]]">
+    <template is="dom-if" if="[[investorId]]">
 
       <caas-investor
         id="investor"
+        active-role="investor"
         api-endpoint="[[apiEndpoint]]"
-        investor-id="[[userId]]"
+        investor-id="[[investorId]]"
         access-token="[[accessToken]]"
         first-name="{{firstName}}"
         last-name="{{lastName}}"
@@ -206,10 +207,10 @@ Placetobe dashboard for investors
 
                     <iron-ajax
                       id="updatePrivacy[[contract.id]]"
-                      headers='[[_authHeader]]'
+                      headers='[[_investorAuthHeader]]'
                       body="[[contract]]"
                       content-type="application/json"
-                      url="[[apiEndpoint]]/investors/[[userId]]/contracts/[[contract.id]]/privacy"
+                      url="[[apiEndpoint]]/investors/[[investorId]]/contracts/[[contract.id]]/privacy"
                       method="PUT"
                       on-response="_handlePrivacySettingsSaved"
                       on-error="_handlePrivacySettingsError"
@@ -218,8 +219,8 @@ Placetobe dashboard for investors
 
                     <iron-ajax
                       id="contractDownload[[contract.id]]"
-                      headers='[[_authHeader]]'
-                      url="[[apiEndpoint]]/investors/[[userId]]/contracts/[[contract.id]]/download"
+                      headers='[[_investorAuthHeader]]'
+                      url="[[apiEndpoint]]/investors/[[investorId]]/contracts/[[contract.id]]/download"
                       method="GET"
                       handle-as="arraybuffer"
                       on-response="_handleDownload"
@@ -345,6 +346,11 @@ Placetobe dashboard for investors
           type: String,
           value: null
         },
+        investorId: {
+          type: Number,
+          value: null,
+          notify: true
+        }
 
       },
       observers: [
@@ -387,7 +393,12 @@ Placetobe dashboard for investors
       },
 
       _setUserParameters: function (tokenDataChange) {
-        this.userId = this._tokenData.data.userId;
+        this.set('userId', tokenDataChange.value.userId);
+        if (tokenDataChange.value.assignedRoles) {
+          for (let index = 0; index < tokenDataChange.value.assignedRoles.length; index++) {
+            if (tokenDataChange.value.assignedRoles[index].roleId == 1) return this.set('investorId', tokenDataChange.value.assignedRoles[index].assignedRoleId);
+          }
+        }
       },
 
       saveInvestorDetails: function () {
@@ -442,7 +453,6 @@ Placetobe dashboard for investors
       },
 
       updatePrivacy: function(evt) {
-          console.log(evt.model.contract.id);
           this.$$("#updatePrivacy" + evt.model.contract.id).generateRequest();
 
       },
